@@ -2897,7 +2897,10 @@ MonoBehaviour:
   renderCanvas: {fileID: 463103264}
   renderOrientation: 0
   canvas: {fileID: 492254624}
-  mapGO: {fileID: 112497600}
+  mapGO1: {fileID: 1629376980}
+  mapGO2: {fileID: 885976751}
+  mapGO3: {fileID: 51924667}
+  mapGO4: {fileID: 1201526294}
   inspector: {fileID: 1060381026}
   safeAspectRatio: {fileID: 407739484}
   exportCamera: {fileID: 107136985}
