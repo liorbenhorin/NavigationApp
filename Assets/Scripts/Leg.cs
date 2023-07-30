@@ -97,7 +97,7 @@ public class Leg : MonoBehaviour
         outboundLegInfo = Instantiate(legInfo, Vector3.zero, Quaternion.identity);
         outboundLegInfo.transform.SetParent(gameObject.transform);
         outboundLegInfo.GetComponent<RotationConstraint>().rotationOffset = new Vector3(0, 0, 0);
-        outboundLegInfo.SetActive(true);
+        // outboundLegInfo.SetActive(true);
 
         inboundLegInfoTra = inboundLegInfo.transform.GetChild(0).gameObject;
         outboundLegInfoTra = outboundLegInfo.transform.GetChild(0).gameObject;
@@ -175,7 +175,7 @@ public class Leg : MonoBehaviour
         else
         {
             AccEndTimeText.gameObject.transform.parent.gameObject.SetActive(true);
-            AccStartTimeText.gameObject.transform.parent.gameObject.SetActive(true); 
+            AccStartTimeText.gameObject.transform.parent.gameObject.SetActive(false); 
             AccEndTimeText.text = Main.ToHMSFromSeconds(AccumulatedTimeFromStart);//AccumulatedTimeFromStart.ToString("n1");
             AccStartTimeText.text = Main.ToHMSFromSeconds(AccumulatedTimeFromEnd);
         }
@@ -183,7 +183,7 @@ public class Leg : MonoBehaviour
 
     public void showAccumlatedTimes(bool state)
     {
-        AccEndTimeText.gameObject.SetActive(state);
+        AccEndTimeText.gameObject.SetActive(false);
         AccStartTimeText.gameObject.SetActive(state);
     }
 
@@ -227,7 +227,7 @@ public class Leg : MonoBehaviour
             lastEnd = endPosition;
             curSpeed = flightSpeed;
             curInboundAltitude = inboundAltitude;
-            curOutboundAltitude = outboundAltitude;
+            // curOutboundAltitude = outboundAltitude;
 
             // update everything...
 
@@ -267,19 +267,19 @@ public class Leg : MonoBehaviour
             var inboundLegInfoAltitude = inboundLegInfoTra.transform.GetChild(2).gameObject;
             inboundLegInfoAltitude.GetComponent<TextMesh>().text = inboundAltitude.ToString();
 
-            var outboundLegInfoHeading = outboundLegInfoTra.transform.GetChild(0).gameObject;
-            outboundLegInfoHeading.GetComponent<TextMesh>().text = inverseBearing.ToString("D3");
-            var outboundLegInfoDuration = outboundLegInfoTra.transform.GetChild(1).gameObject;
-            outboundLegInfoDuration.GetComponent<TextMesh>().text = durationMinutes;
-            outboundLegInfo.transform.position = (-3f * newVector) + ((startPosition + endPosition) / 2f);
-            var outboundLegInfoAltitude = outboundLegInfoTra.transform.GetChild(2).gameObject;
-            outboundLegInfoAltitude.GetComponent<TextMesh>().text = outboundAltitude.ToString();
+            // var outboundLegInfoHeading = outboundLegInfoTra.transform.GetChild(0).gameObject;
+            // outboundLegInfoHeading.GetComponent<TextMesh>().text = inverseBearing.ToString("D3");
+            // var outboundLegInfoDuration = outboundLegInfoTra.transform.GetChild(1).gameObject;
+            // outboundLegInfoDuration.GetComponent<TextMesh>().text = durationMinutes;
+            // outboundLegInfo.transform.position = (-3f * newVector) + ((startPosition + endPosition) / 2f);
+            // var outboundLegInfoAltitude = outboundLegInfoTra.transform.GetChild(2).gameObject;
+            // outboundLegInfoAltitude.GetComponent<TextMesh>().text = outboundAltitude.ToString();
 
-            var outboundLegInfoBackground = outboundLegInfoTra.transform.GetChild(3).gameObject;
-            outboundLegInfoBackground.GetComponent<MeshRenderer>().material.color = new Color(1,0,0,0.33f);
+            // var outboundLegInfoBackground = outboundLegInfoTra.transform.GetChild(3).gameObject;
+            // outboundLegInfoBackground.GetComponent<MeshRenderer>().material.color = new Color(1,0,0,0.33f);
 
             var inboundLegInfoBackground = inboundLegInfoTra.transform.GetChild(3).gameObject;
-            inboundLegInfoBackground.GetComponent<MeshRenderer>().material.color = new Color(0, 0, 1, 0.33f);
+            inboundLegInfoBackground.GetComponent<MeshRenderer>().material.color = new Color(1, 1, 0, 0.25f);
 
             int legTimeMinutes = TimeSpan.FromHours((legDistanceNm /  flightSpeed)).Minutes;
             
@@ -293,7 +293,7 @@ public class Leg : MonoBehaviour
             while (minutes.Count > 0 &&  minutes.Count > legTimeMinutes && ((ii - 1) < minutes.Count))
             {
                 Destroy(minutes[ii-1].Inbound.Marker);
-                Destroy(minutes[ii-1].Outbound.Marker);
+                // Destroy(minutes[ii-1].Outbound.Marker);
                 minutes.RemoveAt(ii-1);
                 ii++;
             }
@@ -314,9 +314,9 @@ public class Leg : MonoBehaviour
                     inbound.Marker.transform.SetParent(gameObject.transform);
                     inbound.Marker.GetComponent<Renderer>().material.color = Color.blue;
                     
-                    outbound.Marker = Instantiate(emptyLine, new Vector3(0,-0.1f,0), Quaternion.identity);
-                    outbound.Marker.transform.SetParent(gameObject.transform);
-                    outbound.Marker.GetComponent<Renderer>().material.color = Color.red;
+                    // outbound.Marker = Instantiate(emptyLine, new Vector3(0,-0.1f,0), Quaternion.identity);
+                    // outbound.Marker.transform.SetParent(gameObject.transform);
+                    // outbound.Marker.GetComponent<Renderer>().material.color = Color.red;
                     
                     // TODO: Need to do this only for even minutes!
 
@@ -326,15 +326,15 @@ public class Leg : MonoBehaviour
                         inbound.Text.transform.SetParent(inbound.Marker.transform);
                         inbound.Text.GetComponent<Renderer>().material.color = Color.blue;
 
-                        outbound.Text = Instantiate(minuteText, Vector3.zero, Quaternion.identity);
-                        outbound.Text.transform.SetParent(inbound.Marker.transform);
-                        outbound.Text.GetComponent<Renderer>().material.color = Color.red;
+                        // outbound.Text = Instantiate(minuteText, Vector3.zero, Quaternion.identity);
+                        // outbound.Text.transform.SetParent(inbound.Marker.transform);
+                        // outbound.Text.GetComponent<Renderer>().material.color = Color.red;
                         //flip the label for the outbound markers
-                        outbound.Text.GetComponent<RotationConstraint>().rotationOffset = new Vector3(90f, 0, 0);
+                        // outbound.Text.GetComponent<RotationConstraint>().rotationOffset = new Vector3(90f, 0, 0);
                     }
 
                     pair.Inbound = inbound;  
-                    pair.Outbound = outbound;  
+                    // pair.Outbound = outbound;  
                     
                     minutes.Add(pair);
                     //print("added minute: " + i);
@@ -344,15 +344,15 @@ public class Leg : MonoBehaviour
                 for (int i = 0; i <= legTimeMinutes-1; i+=1)
                 {
                     var inboundMarkerLineRenderer = minutes[i].Inbound.Marker.GetComponent<LineRenderer>();
-                    var outboundMarkerLineRenderer = minutes[i].Outbound.Marker.GetComponent<LineRenderer>();
+                    // var outboundMarkerLineRenderer = minutes[i].Outbound.Marker.GetComponent<LineRenderer>();
 
                     
                     // gets the minute marker position along the leg
                     var inboundMarkerPosition = (minuteLength * (i+1)) * Vector3.Normalize(endPosition - startPosition) +
                                          startPosition;
                     
-                    var outboundMarkerPosition = (minuteLength * (i+1)) * Vector3.Normalize(startPosition - endPosition) +
-                                                endPosition;
+                    // var outboundMarkerPosition = (minuteLength * (i+1)) * Vector3.Normalize(startPosition - endPosition) +
+                    //                             endPosition;
                     
                     // get perpendicular vector of this leg
                     //var newVec = startPosition - endPosition;
@@ -369,18 +369,18 @@ public class Leg : MonoBehaviour
                         inboundText.SetActive(true);
                         inboundText.GetComponent<TextMesh>().text = (i + 1).ToString();
                         
-                        var outboundText = minutes[i].Outbound.Text;
-                        outboundText.transform.position = outboundMarkerPosition + ((-markerLength-0.5f) * newVector);
-                        outboundText.SetActive(true);
-                        outboundText.GetComponent<TextMesh>().text = (i + 1).ToString();
+                        // var outboundText = minutes[i].Outbound.Text;
+                        // outboundText.transform.position = outboundMarkerPosition + ((-markerLength-0.5f) * newVector);
+                        // outboundText.SetActive(true);
+                        // outboundText.GetComponent<TextMesh>().text = (i + 1).ToString();
                     }
 
                     // draw the two points of the minute marker
                     inboundMarkerLineRenderer.SetPosition(0, inboundMarkerPosition + (markerLength * newVector));
                     inboundMarkerLineRenderer.SetPosition(1, inboundMarkerPosition);
                     
-                    outboundMarkerLineRenderer.SetPosition(0, outboundMarkerPosition + (-markerLength * newVector));
-                    outboundMarkerLineRenderer.SetPosition(1, outboundMarkerPosition);
+                    // outboundMarkerLineRenderer.SetPosition(0, outboundMarkerPosition + (-markerLength * newVector));
+                    // outboundMarkerLineRenderer.SetPosition(1, outboundMarkerPosition);
                     
                 }
             }
@@ -397,14 +397,14 @@ public class Leg : MonoBehaviour
             inboundDrift.SetPosition(0, startPosition);
             inboundDrift.SetPosition(1, angledVector);
 
-            var rotNeg10degPivot = rot10deg * (startPosition - endPosition);
-            var rotatedStartPosition = rotNeg10degPivot + endPosition;
-            Vector3 angledNegVector = (endPosition + rotatedStartPosition) / 2;
-            outboundDrift.SetPosition(0, endPosition);
-            outboundDrift.SetPosition(1, angledNegVector);
+            // var rotNeg10degPivot = rot10deg * (startPosition - endPosition);
+            // var rotatedStartPosition = rotNeg10degPivot + endPosition;
+            // Vector3 angledNegVector = (endPosition + rotatedStartPosition) / 2;
+            // outboundDrift.SetPosition(0, endPosition);
+            // outboundDrift.SetPosition(1, angledNegVector);
 
             inboundDriftGO.GetComponent<Renderer>().material.mainTextureScale = new Vector2((float)legDistanceNm, 1);
-            outboundDriftGO.GetComponent<Renderer>().material.mainTextureScale = new Vector2((float)legDistanceNm, 1);
+            // outboundDriftGO.GetComponent<Renderer>().material.mainTextureScale = new Vector2((float)legDistanceNm, 1);
         }
 
     }

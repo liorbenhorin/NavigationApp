@@ -46,7 +46,10 @@ public class Main : MonoBehaviour
     public RenderOrientation renderOrientation = RenderOrientation.Portrait;
     // public Vector2 renderAspectRatio = new Vector2(1,1.42F);
     public Canvas canvas;
-    public GameObject mapGO;
+    public GameObject mapGO1;
+    public GameObject mapGO2;
+    public GameObject mapGO3;
+    public GameObject mapGO4;
 
     public Inspector inspector;
 
@@ -143,7 +146,9 @@ public class Main : MonoBehaviour
     public static string ToHMSFromSeconds(double seconds)
     {
         var result = TimeSpan.FromSeconds(seconds);
-        return result.ToString(@"mm\:ss");
+        int sec = (int)Math.Round(result.Seconds / 5.0) * 5;
+        return result.Minutes + ":" + sec.ToString("D2"); 
+        // return result.ToString(@"mm\:ss");
     }
 
     public static Coordinate SceneToCoordinate(Vector3 cursorPosition)
@@ -324,14 +329,23 @@ public class Main : MonoBehaviour
 
     public void SetMapOpacity(float opacity)
     {
-        var m = mapGO.GetComponent<Renderer>().material;
-        var c = new Color(m.color.r, m.color.g,m.color.b, opacity);
-        m.color = c;
+        var m1 = mapGO1.GetComponent<Renderer>().material;
+        var m2 = mapGO2.GetComponent<Renderer>().material;
+        var m3 = mapGO3.GetComponent<Renderer>().material;
+        var m4 = mapGO4.GetComponent<Renderer>().material;
+
+        var c = new Color(m1.color.r, m1.color.g,m1.color.b, opacity);
+
+        m1.color = c;
+        m2.color = c;
+        m3.color = c;
+        m4.color = c;
+
     }
 
     public float GetMapOpacity()
     {
-        var m = mapGO.GetComponent<Renderer>().material;
+        var m = mapGO1.GetComponent<Renderer>().material;
         return m.color.a;
     }
 
