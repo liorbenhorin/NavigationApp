@@ -97,7 +97,7 @@ public class DynamicMap : MonoBehaviour
 
                 // Apply the appropriate texture
                 Renderer planeRenderer = planeObj.GetComponent<Renderer>();
-                Material unlitMaterial = new Material(Shader.Find("Unlit/Texture"));
+                Material unlitMaterial = new Material(Shader.Find("UI/Unlit/Transparent"));
                 unlitMaterial.mainTexture = texture;
                 planeRenderer.material = unlitMaterial;
 
@@ -110,6 +110,8 @@ public class DynamicMap : MonoBehaviour
 
                 // Name the plane according to its row and column
                 planeObj.name = $"square_{col}_{row}";
+                MeshCollider meshCollider = planeObj.GetComponent<MeshCollider>();
+                meshCollider.enabled = false;
 
                 // Add the plane to the list for later cleanup
                 planes.Add(planeObj);

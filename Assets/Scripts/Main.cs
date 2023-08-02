@@ -143,7 +143,9 @@ public class Main : MonoBehaviour
     public static string ToHMSFromSeconds(double seconds)
     {
         var result = TimeSpan.FromSeconds(seconds);
-        return result.ToString(@"mm\:ss");
+        int sec = (int)Math.Round(result.Seconds / 5.0) * 5;
+        return result.Minutes + ":" + sec.ToString("D2"); 
+        // return result.ToString(@"mm\:ss");
     }
 
     public static Coordinate SceneToCoordinate(Vector3 cursorPosition)
@@ -324,15 +326,36 @@ public class Main : MonoBehaviour
 
     public void SetMapOpacity(float opacity)
     {
-        var m = mapGO.GetComponent<Renderer>().material;
-        var c = new Color(m.color.r, m.color.g,m.color.b, opacity);
-        m.color = c;
+        print(opacity);
+        Transform offset_root = mapGO.transform.GetChild(0);
+
+        int tilesCount = offset_root.childCount;
+        for (int i = 0; i < tilesCount; i++)
+        {
+            Transform childTransform = offset_root.GetChild(i);
+            Material mat = childTransform.GetComponent<Renderer>().material;
+        
+            var c = new Color(mat.color.r, mat.color.g, mat.color.b, opacity);
+            mat.color = c;
+            
+        }
+        // var map_tiles = mapGO.GetComponent<Renderer>().material;
+
+
+        // var c = new Color(m1.color.r, m1.color.g,m1.color.b, opacity);
+
+        // m1.color = c;
+        // m2.color = c;
+        // m3.color = c;
+        // m4.color = c;
+
     }
 
     public float GetMapOpacity()
     {
-        var m = mapGO.GetComponent<Renderer>().material;
-        return m.color.a;
+        // var m = mapGO.GetComponent<Renderer>().material;
+        // return m.color.a;
+        return 1f;
     }
 
 
@@ -597,7 +620,7 @@ public class Main : MonoBehaviour
 
         if (canZoom)
         {
-            print(zoom);
+            // print(zoom);
             mapCameraCamera.orthographicSize = zoom;
             A4buttonTool.SetUnSelected();
             A3buttonTool.SetUnSelected();
@@ -605,10 +628,11 @@ public class Main : MonoBehaviour
         }
 
 
-        if (Input.GetKey(KeyCode.Space))
-        {
+        // if (Input.GetKey(KeyCode.Space))
+        // {
             //Cursor.SetCursor(cursorTextureDrag, hotSpot, cursorMode); 
-            
+        if (toolbar.currentTool == ToolType.None && !gizmos.is_alive)
+        {    
             if (Input.GetMouseButtonDown(0))
             {
 
@@ -628,9 +652,9 @@ public class Main : MonoBehaviour
                 lastMouse = curMouse;
                 mapCameraTransform.Translate(move, Space.World);
                 return;
-            }
+                }
+            // }
         }
-
         ////////////////////////////////////////////////////////////
         // End of Screen navigation logic //////////////////////////
 

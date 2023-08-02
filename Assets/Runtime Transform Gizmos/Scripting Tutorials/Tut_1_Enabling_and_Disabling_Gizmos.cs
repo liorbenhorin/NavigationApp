@@ -54,6 +54,8 @@ namespace RTG
         /// </summary>
         private GameObject _targetObject;
 
+        public bool is_alive = false;
+
         /// <summary>
         /// Performs all necessary initializations.
         /// </summary>
@@ -192,6 +194,7 @@ namespace RTG
                 // a target object is valid. There is no need to check if the gizmo is already
                 // enabled. The 'SetEnabled' call will simply be ignored if that is the case.
                 _workGizmo.Gizmo.SetEnabled(true);
+                is_alive = true;
             }
             else
             {
@@ -201,6 +204,8 @@ namespace RTG
                 _objectRotationGizmo.Gizmo.SetEnabled(false);
                 _objectScaleGizmo.Gizmo.SetEnabled(false);
                 _objectUniversalGizmo.Gizmo.SetEnabled(false);
+
+                is_alive = false;
             }
         }
     }
