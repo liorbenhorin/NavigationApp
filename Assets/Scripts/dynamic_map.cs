@@ -39,6 +39,9 @@ public class dynamic_map : MonoBehaviour
         int numRows = 0;
         int numCols = 0;
 
+        GameObject offset_null = new GameObject("offset_null");
+        offset_null.transform.parent = transform;
+
         // Parse the data from image file names
         foreach (string filePath in imageFiles)
         {
@@ -58,7 +61,7 @@ public class dynamic_map : MonoBehaviour
                 numCols = Mathf.Max(numCols, col + 1);
             }
         }
-
+        
         // Create the grid of planes
         for (int row = 0; row < numRows; row++)
         {
@@ -101,7 +104,7 @@ public class dynamic_map : MonoBehaviour
                 planeObj.transform.localScale = new Vector3(aspectRatio, 1f, 1f);
 
                 // Parent the plane to the grid builder GameObject
-                planeObj.transform.parent = transform;
+                planeObj.transform.parent = offset_null.transform;
 
                 // Name the plane according to its row and column
                 planeObj.name = $"square_{col}_{row}";
@@ -110,6 +113,11 @@ public class dynamic_map : MonoBehaviour
                 planes.Add(planeObj);
             }
         }
+
+        offset_null.transform.position = new Vector3(4.76f, 0f, 0.25f);
+
+        transform.localScale = new Vector3(4.67f, 1f, 4.67f);
+        transform.Rotate(Vector3.up, 180f);
     }
 
     void OnApplicationQuit()

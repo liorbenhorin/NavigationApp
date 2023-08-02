@@ -611,7 +611,7 @@ public class Main : MonoBehaviour
 
         if (canZoom)
         {
-            print(zoom);
+            // print(zoom);
             mapCameraCamera.orthographicSize = zoom;
             A4buttonTool.SetUnSelected();
             A3buttonTool.SetUnSelected();
