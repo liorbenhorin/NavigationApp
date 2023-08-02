@@ -60,6 +60,7 @@ public class Main : MonoBehaviour
     public Tool A3buttonTool;
     public Tool A4buttonTool;
     public bool showAccumulatedFlightTime = true;
+    public bool showShowReturnLeg = true;
 
     private List<FlightLegData> flight = new List<FlightLegData>();
     private List<GameObject> waypoints = new List<GameObject>();
@@ -365,6 +366,12 @@ public class Main : MonoBehaviour
         UpdateAccumalatedTimes();
     }
 
+    public void ToggleShowReturnLeg(bool state)
+    {
+        showShowReturnLeg = state;
+        UpdateShowBidirectional();
+    }
+
     private void Camera_Zoom(string size)
     {
 
@@ -450,10 +457,17 @@ public class Main : MonoBehaviour
         accumulatedTime.boolCallback = new UnityAction<bool>(ToggleAccumulatedFlightTime);
         accumulatedTime.intialBoolValue = true;
 
+        Param showReturnLeg = new Param();
+        showReturnLeg.type = ParamType.Bool;
+        showReturnLeg.name = "Show Return Leg";
+        showReturnLeg.boolCallback = new UnityAction<bool>(ToggleShowReturnLeg);
+        showReturnLeg.intialBoolValue = true;
+
         paramaters.Add(_renderOrientation);
         paramaters.Add(speed);
         paramaters.Add(mapOpacity);
         paramaters.Add(accumulatedTime);
+        paramaters.Add(showReturnLeg);
         inspector.Edit(this.gameObject, "Map settings", paramaters);   
     }
 
@@ -519,6 +533,17 @@ public class Main : MonoBehaviour
             }
             
             //print(accTime);
+        }
+    }
+
+    public void UpdateShowBidirectional()
+    {  
+        if (flight.Count>0)
+        {
+            for (int i=0; i<flight.Count; i++)
+            {
+                flight[i].script.updateShowBidirectional();
+            }
         }
     }
 
