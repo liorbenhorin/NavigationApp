@@ -32,10 +32,12 @@ public class DynamicMap : MonoBehaviour
 
    void Start()
    {
-        string directoryPath = Path.Combine(Application.dataPath, "Resources", "ariel_jpg").Replace('\\', '/');
-        print(directoryPath);
+        // string directoryPath = Path.Combine(Application.dataPath, "Resources", "ariel_jpg").Replace('\\', '/');
+        // print(directoryPath);
         // Get the list of image files from the directory
-        string[] imageFiles = Directory.GetFiles(directoryPath, "*.jpg");
+        // string[] imageFiles = Directory.GetFiles(directoryPath, "*.jpg");
+        UnityEngine.Object[] imageObjects = Resources.LoadAll("ariel_jpg", typeof(Texture2D));
+
 
         int numRows = 0;
         int numCols = 0;
@@ -44,11 +46,13 @@ public class DynamicMap : MonoBehaviour
         offset_null.transform.parent = transform;
 
         // Parse the data from image file names
-        foreach (string filePath in imageFiles)
+        foreach (UnityEngine.Object imageObj in imageObjects)
         {
-            string fileName = Path.GetFileNameWithoutExtension(filePath);
+            // string fileName = Path.GetFileNameWithoutExtension(filePath);
+            // string[] nameParts = fileName.Split('_');
+            Texture2D texture = (Texture2D)imageObj;
+            string fileName = imageObj.name;
             string[] nameParts = fileName.Split('_');
-            print(fileName);
 
             if (nameParts.Length != 3)
             {
@@ -74,18 +78,22 @@ public class DynamicMap : MonoBehaviour
                 // {
                 //     break; // No more textures to apply
                 // }
-                string textureFilePath = Path.Combine(directoryPath, $"square_{col}_{row}.jpg");
+                // string textureFilePath = Path.Combine(directoryPath, $"square_{col}_{row}.jpg");
 
-                if (!File.Exists(textureFilePath))
-                {
-                    continue; // Skip if the texture file is missing
-                }
+                // if (!File.Exists(textureFilePath))
+                // {
+                //     continue; // Skip if the texture file is missing
+                // }
 
                 print(String.Format("{0}_{1} ", col, row));
+                string fileName = $"square_{col}_{row}";
+
+                // Load the texture from the Resources folder
+                Texture2D texture = Resources.Load<Texture2D>(Path.Combine("ariel_jpg", fileName));
                 // Load the texture from file
-                byte[] imageData = File.ReadAllBytes(textureFilePath);
-                Texture2D texture = new Texture2D(2, 2); // Create a temporary texture
-                texture.LoadImage(imageData);
+                // byte[] imageData = File.ReadAllBytes(textureFilePath);
+                // Texture2D texture = new Texture2D(2, 2); // Create a temporary texture
+                // texture.LoadImage(imageData);
 
                 // Create a new plane GameObject
                 GameObject planeObj = GameObject.CreatePrimitive(PrimitiveType.Plane);
