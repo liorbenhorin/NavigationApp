@@ -605,7 +605,6 @@ public class Main : MonoBehaviour
 
     }
 
-
     // Update is called once per frame
     void Update()
     {
@@ -623,7 +622,7 @@ public class Main : MonoBehaviour
         //crosshair.transform.position = objectPos;
 
         
-        if (toolbar.currentTool != ToolType.None && Input.GetKeyDown(KeyCode.Escape))
+        if (toolbar.currentTool != ToolType.None && (Input.GetKeyDown(KeyCode.Escape) | Input.GetKeyDown(KeyCode.Return)))
         {
             toolbar.StopAll();
             return;
@@ -657,7 +656,18 @@ public class Main : MonoBehaviour
         // {
             //Cursor.SetCursor(cursorTextureDrag, hotSpot, cursorMode); 
         if (toolbar.currentTool == ToolType.None && !gizmos.is_alive)
-        {    
+        {   
+
+            // filter UI drags
+            PointerEventData eventData = new PointerEventData(EventSystem.current);
+            eventData.position = Input.mousePosition;
+            System.Collections.Generic.List<RaycastResult> results = new System.Collections.Generic.List<RaycastResult>();
+            EventSystem.current.RaycastAll(eventData, results);
+            if (results.Count > 0){
+                return;
+            }
+       
+
             if (Input.GetMouseButtonDown(0))
             {
 
