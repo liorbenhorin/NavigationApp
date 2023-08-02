@@ -62,6 +62,9 @@ public class Main : MonoBehaviour
     public bool showAccumulatedFlightTime = true;
     public bool showShowReturnLeg = true;
 
+    public GameObject testC;
+    public GameObject test2D;
+
     private List<FlightLegData> flight = new List<FlightLegData>();
     private List<GameObject> waypoints = new List<GameObject>();
     private Vector3 lastMouse;
@@ -113,6 +116,33 @@ public class Main : MonoBehaviour
         // renderSafeFrameLine = renderSafeFrame.GetComponent<LineRenderer>();
         // renderCurAspectRatio = renderAspectRatio;
         // DrawRenderSafe();
+
+
+        // xx = new Vector2(35.09638888888889,32.91861111111111);
+        print(CoordinateToScene(35.09638888888889,32.91861111111111));
+        testC.transform.position = CoordinateToScene(32.91861111111111, 35.09638888888889);
+        print("vvv");
+
+        Vector3 scenePosition  = CoordinateToScene(32.91861111111111, 35.09638888888889);
+        RectTransform canvasRectTransform = canvas.GetComponent<RectTransform>();
+        Camera sceneCamera = mainCamera.GetComponent<Camera>();
+
+        float distanceFromCamera = Vector3.Distance(sceneCamera.transform.position, scenePosition);
+
+        // Calculate a scale factor based on the camera orthographic size and distance
+        float orthographicSize = sceneCamera.orthographicSize;
+        float scaleFactor = orthographicSize / distanceFromCamera;
+
+        // Project the scene position onto the screen using the scale factor
+        Vector3 screenPosition = sceneCamera.WorldToScreenPoint(scenePosition) * scaleFactor;
+
+        // Convert screen position to local position within canvasRectTransform
+        Vector2 uiRectPosition;
+        RectTransformUtility.ScreenPointToLocalPointInRectangle(canvasRectTransform, screenPosition, null, out uiRectPosition);
+
+        
+        print(uiRectPosition);
+
     }
 
 
@@ -163,6 +193,17 @@ public class Main : MonoBehaviour
         //print("lon: " + lon + " lat: " + lat);
         //print(c);
         return c;
+    }
+
+    public static Vector3 CoordinateToScene(double latitudeDecimalDegrees, double longitudeDecimalDegrees)
+    {
+        // x --> lon (presented as NM dist from 35E lon)
+        // z --> lat (presented as NM dist from 33N lat)
+
+        double lat = (latitudeDecimalDegrees - latOriginRadians) / NMConversionRate * latConversionRate;
+        double lon = (longitudeDecimalDegrees - lonOriginRadians) / NMConversionRate * lonConversionRate;
+
+        return new Vector3((float)lon, 0f, (float)lat);
     }
 
     public Vector3 CursorLocalPosition()

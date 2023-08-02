@@ -22,6 +22,9 @@ public class Waypoint : MonoBehaviour
         tra = gameObject.transform;
         var position = tra.position;
         coordinate = Main.SceneToCoordinate(position);
+        print(coordinate.Latitude.DecimalDegree);
+        print(coordinate.Longitude.DecimalDegree);
+        print("XXX");
         lastPos = position;
     }
 
