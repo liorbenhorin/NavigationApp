@@ -26,15 +26,16 @@ using UnityEngine;
 
 public class dynamic_map : MonoBehaviour
 {
-    public string directoryPath = "C:/dev/personal/temp/NavigationApp/Assets/Resources/arieal"; // Replace with the path to your images directory
     public float spacing = 0.1f; // Spacing between each plane
 
     private List<GameObject> planes = new List<GameObject>();
 
    void Start()
-    {
+   {
+        string directoryPath = Path.Combine(Application.dataPath, "Resources", "arieal_jpg").Replace('\\', '/');
+        print(directoryPath);
         // Get the list of image files from the directory
-        string[] imageFiles = Directory.GetFiles(directoryPath, "*.png");
+        string[] imageFiles = Directory.GetFiles(directoryPath, "*.jpg");
 
         int numRows = 0;
         int numCols = 0;
@@ -47,6 +48,7 @@ public class dynamic_map : MonoBehaviour
         {
             string fileName = Path.GetFileNameWithoutExtension(filePath);
             string[] nameParts = fileName.Split('_');
+            print(fileName);
 
             if (nameParts.Length != 3)
             {
@@ -72,7 +74,7 @@ public class dynamic_map : MonoBehaviour
                 // {
                 //     break; // No more textures to apply
                 // }
-                string textureFilePath = Path.Combine(directoryPath, $"square_{col}_{row}.png");
+                string textureFilePath = Path.Combine(directoryPath, $"square_{col}_{row}.jpg");
 
                 if (!File.Exists(textureFilePath))
                 {
