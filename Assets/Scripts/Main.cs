@@ -738,10 +738,14 @@ public class Main : MonoBehaviour
                     if( Physics.Raycast( ray, out hit, 100 ) )
                     {
                         GameObject o = hit.transform.gameObject;
-                        waypoints.Remove(o);
-                        gizmos.OnTargetObjectChanged(null);
-                        Destroy(o);
-                        DrawLegs();
+                        Waypoint wp = o.GetComponent<Waypoint>();
+                        if (wp)
+                        {
+                            waypoints.Remove(o);
+                            gizmos.OnTargetObjectChanged(null);
+                            Destroy(o);
+                            DrawLegs();
+                        }
                     }
                 }
                 break;
