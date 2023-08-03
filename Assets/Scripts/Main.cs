@@ -121,27 +121,24 @@ public class Main : MonoBehaviour
         // xx = new Vector2(35.09638888888889,32.91861111111111);
         print(CoordinateToScene(35.09638888888889,32.91861111111111));
         testC.transform.position = CoordinateToScene(32.91861111111111, 35.09638888888889);
-        print("vvv");
+    }
 
+    private void testMove()
+    {
         Vector3 scenePosition  = CoordinateToScene(32.91861111111111, 35.09638888888889);
         RectTransform canvasRectTransform = canvas.GetComponent<RectTransform>();
         Camera sceneCamera = mainCamera.GetComponent<Camera>();
 
         float distanceFromCamera = Vector3.Distance(sceneCamera.transform.position, scenePosition);
-
-        // Calculate a scale factor based on the camera orthographic size and distance
-        float orthographicSize = sceneCamera.orthographicSize;
-        float scaleFactor = orthographicSize / distanceFromCamera;
-
-        // Project the scene position onto the screen using the scale factor
-        Vector3 screenPosition = sceneCamera.WorldToScreenPoint(scenePosition) * scaleFactor;
-
-        // Convert screen position to local position within canvasRectTransform
-        Vector2 uiRectPosition;
-        RectTransformUtility.ScreenPointToLocalPointInRectangle(canvasRectTransform, screenPosition, null, out uiRectPosition);
-
-        
-        print(uiRectPosition);
+        RectTransform uiRectTransform = test2D.GetComponent<RectTransform>();
+       
+        Vector3 screenPosition = sceneCamera.WorldToScreenPoint(scenePosition);
+        Vector2 finalPosition = new Vector2(screenPosition.x, screenPosition.y);
+        // print(scenePosition);
+        // print(screenPosition);
+        // print(finalPosition);
+        // print(distanceFromCamera);
+        uiRectTransform.anchoredPosition  = finalPosition;
 
     }
 
@@ -690,6 +687,7 @@ public class Main : MonoBehaviour
             A4buttonTool.SetUnSelected();
             A3buttonTool.SetUnSelected();
             // DrawRenderSafe();
+            testMove();
         }
 
 
@@ -727,6 +725,7 @@ public class Main : MonoBehaviour
                     pos.y * dragSpeed * (orthographicSize / 10));
                 lastMouse = curMouse;
                 mapCameraTransform.Translate(move, Space.World);
+                testMove();
                 return;
                 }
             // }
@@ -798,6 +797,8 @@ public class Main : MonoBehaviour
             }
 
         }
+
+        
 
     }
 
