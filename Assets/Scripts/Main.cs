@@ -171,6 +171,9 @@ public class Main : MonoBehaviour
             Vector3 screenPosition = sceneCamera.WorldToScreenPoint(scenePosition);
             Vector2 finalPosition = new Vector2(screenPosition.x, screenPosition.y);
             uiRectTransform.anchoredPosition  = finalPosition;
+
+            TMPro.TextMeshProUGUI text = waypoint.waypoints_go.GetComponent<TextMeshProUGUI>();
+            text.enabled = sceneCamera.orthographicSize < 24;
         }
 
     }
