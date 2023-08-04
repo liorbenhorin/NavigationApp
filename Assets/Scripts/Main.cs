@@ -84,7 +84,6 @@ public class Main : MonoBehaviour
     public bool showAccumulatedFlightTime = true;
     public bool showShowReturnLeg = true;
 
-    public GameObject testC;
     public GameObject rata_waypoint_go;
 
     private List<FlightLegData> flight = new List<FlightLegData>();
@@ -139,30 +138,12 @@ public class Main : MonoBehaviour
         // renderCurAspectRatio = renderAspectRatio;
         // DrawRenderSafe();
 
-
-        // xx = new Vector2(35.09638888888889,32.91861111111111);
-        print(CoordinateToScene(35.09638888888889,32.91861111111111));
-        testC.transform.position = CoordinateToScene(32.91861111111111, 35.09638888888889);
-
         load_RATA_waypoints();
     }
 
     private void update_rata_points()
     {
-        // Vector3 scenePosition  = CoordinateToScene(32.91861111111111, 35.09638888888889);
-        // RectTransform canvasRectTransform = canvas.GetComponent<RectTransform>();
         Camera sceneCamera = mainCamera.GetComponent<Camera>();
-
-        // float distanceFromCamera = Vector3.Distance(sceneCamera.transform.position, scenePosition);
-        // RectTransform uiRectTransform = rata_waypoint_go.GetComponent<RectTransform>();
-       
-        // Vector3 screenPosition = sceneCamera.WorldToScreenPoint(scenePosition);
-        // Vector2 finalPosition = new Vector2(screenPosition.x, screenPosition.y);
-        // print(scenePosition);
-        // print(screenPosition);
-        // print(finalPosition);
-        // print(distanceFromCamera);
-        // uiRectTransform.anchoredPosition  = finalPosition;
 
         foreach(RATA_waypoint_go waypoint in rata_waypoints_go)
         {
