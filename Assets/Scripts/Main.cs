@@ -25,6 +25,19 @@ struct FlightLegData
     public Leg script;
 }
 
+[System.Serializable]
+public class RATA_waypoint
+{
+    public string name;
+    public float[] coord;
+}
+
+[System.Serializable]
+public class RATA_waypoints
+{
+    public RATA_waypoint[] waypoints;
+}
+
 public class Main : MonoBehaviour
 {
 
@@ -121,6 +134,8 @@ public class Main : MonoBehaviour
         // xx = new Vector2(35.09638888888889,32.91861111111111);
         print(CoordinateToScene(35.09638888888889,32.91861111111111));
         testC.transform.position = CoordinateToScene(32.91861111111111, 35.09638888888889);
+
+        load_RATA_waypoints();
     }
 
     private void testMove()
@@ -142,6 +157,20 @@ public class Main : MonoBehaviour
 
     }
 
+
+    private void load_RATA_waypoints()
+    {
+        TextAsset waypointsFile = Resources.Load<TextAsset>("user-waypoints");
+        var waypointData = JsonUtility.FromJson<RATA_waypoints>(waypointsFile.text);
+
+  
+        foreach (RATA_waypoint waypoint in waypointData.waypoints)
+        {
+            Debug.Log($"Waypoint Name: {waypoint.name}");
+            Debug.Log($"Latitude: {waypoint.coord[0]}");
+            Debug.Log($"Longitude: {waypoint.coord[1]}");
+        }
+    }
 
     public static int ToMagnetic(int angle = 360, int divation = -5)
     {
