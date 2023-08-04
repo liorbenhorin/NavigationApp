@@ -10,6 +10,7 @@ using UnityEngine.Animations;
 using CoordinateSharp;
 using RTG;
 using B83;
+using TMPro;
 
 public enum RenderOrientation
 {
@@ -37,6 +38,14 @@ public class RATA_waypoints
 {
     public RATA_waypoint[] waypoints;
 }
+
+[System.Serializable]
+public class RATA_waypoint_go
+{
+    public RATA_waypoint waypoint_data;
+    public GameObject waypoints_go;
+}
+
 
 public class Main : MonoBehaviour
 {
@@ -76,7 +85,7 @@ public class Main : MonoBehaviour
     public bool showShowReturnLeg = true;
 
     public GameObject testC;
-    public GameObject test2D;
+    public GameObject rata_waypoint_go;
 
     private List<FlightLegData> flight = new List<FlightLegData>();
     private List<GameObject> waypoints = new List<GameObject>();
@@ -100,7 +109,7 @@ public class Main : MonoBehaviour
     private static double latOriginRadians = 33d;
     private bool resumeDrawing;
     
-
+    private List<RATA_waypoint_go> rata_waypoints_go = new List<RATA_waypoint_go>();
 
     // Start is called before the first frame update
     private void Start()
@@ -138,22 +147,31 @@ public class Main : MonoBehaviour
         load_RATA_waypoints();
     }
 
-    private void testMove()
+    private void update_rata_points()
     {
-        Vector3 scenePosition  = CoordinateToScene(32.91861111111111, 35.09638888888889);
-        RectTransform canvasRectTransform = canvas.GetComponent<RectTransform>();
+        // Vector3 scenePosition  = CoordinateToScene(32.91861111111111, 35.09638888888889);
+        // RectTransform canvasRectTransform = canvas.GetComponent<RectTransform>();
         Camera sceneCamera = mainCamera.GetComponent<Camera>();
 
-        float distanceFromCamera = Vector3.Distance(sceneCamera.transform.position, scenePosition);
-        RectTransform uiRectTransform = test2D.GetComponent<RectTransform>();
+        // float distanceFromCamera = Vector3.Distance(sceneCamera.transform.position, scenePosition);
+        // RectTransform uiRectTransform = rata_waypoint_go.GetComponent<RectTransform>();
        
-        Vector3 screenPosition = sceneCamera.WorldToScreenPoint(scenePosition);
-        Vector2 finalPosition = new Vector2(screenPosition.x, screenPosition.y);
+        // Vector3 screenPosition = sceneCamera.WorldToScreenPoint(scenePosition);
+        // Vector2 finalPosition = new Vector2(screenPosition.x, screenPosition.y);
         // print(scenePosition);
         // print(screenPosition);
         // print(finalPosition);
         // print(distanceFromCamera);
-        uiRectTransform.anchoredPosition  = finalPosition;
+        // uiRectTransform.anchoredPosition  = finalPosition;
+
+        foreach(RATA_waypoint_go waypoint in rata_waypoints_go)
+        {
+            Vector3 scenePosition = CoordinateToScene(waypoint.waypoint_data.coord[1], waypoint.waypoint_data.coord[0]);
+            RectTransform uiRectTransform = waypoint.waypoints_go.GetComponent<RectTransform>();
+            Vector3 screenPosition = sceneCamera.WorldToScreenPoint(scenePosition);
+            Vector2 finalPosition = new Vector2(screenPosition.x, screenPosition.y);
+            uiRectTransform.anchoredPosition  = finalPosition;
+        }
 
     }
 
@@ -163,12 +181,22 @@ public class Main : MonoBehaviour
         TextAsset waypointsFile = Resources.Load<TextAsset>("user-waypoints");
         var waypointData = JsonUtility.FromJson<RATA_waypoints>(waypointsFile.text);
 
-  
         foreach (RATA_waypoint waypoint in waypointData.waypoints)
         {
             Debug.Log($"Waypoint Name: {waypoint.name}");
             Debug.Log($"Latitude: {waypoint.coord[0]}");
             Debug.Log($"Longitude: {waypoint.coord[1]}");
+
+            GameObject wp = Instantiate(rata_waypoint_go, transform.position, transform.rotation) as GameObject;
+            wp.name = $"wp_{waypoint.name}";
+            TMPro.TextMeshProUGUI text = wp.GetComponent<TextMeshProUGUI>();
+            text.text = waypoint.name;
+            wp.transform.parent = canvas.transform;
+            
+            RATA_waypoint_go w = new RATA_waypoint_go();
+            w.waypoints_go = wp;
+            w.waypoint_data = waypoint;
+            rata_waypoints_go.Add(w);
         }
     }
 
@@ -716,7 +744,7 @@ public class Main : MonoBehaviour
             A4buttonTool.SetUnSelected();
             A3buttonTool.SetUnSelected();
             // DrawRenderSafe();
-            testMove();
+            update_rata_points();
         }
 
 
@@ -754,7 +782,7 @@ public class Main : MonoBehaviour
                     pos.y * dragSpeed * (orthographicSize / 10));
                 lastMouse = curMouse;
                 mapCameraTransform.Translate(move, Space.World);
-                testMove();
+                update_rata_points();
                 return;
                 }
             // }
