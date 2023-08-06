@@ -83,7 +83,9 @@ public class Main : MonoBehaviour
     public Tool A4buttonTool;
     public bool showAccumulatedFlightTime = true;
     public bool showShowReturnLeg = true;
+    public bool showRATAwaypoints = true;
 
+    public GameObject rate_waypoints_parent_go;
     public GameObject rata_waypoint_go;
 
     private List<FlightLegData> flight = new List<FlightLegData>();
@@ -139,10 +141,14 @@ public class Main : MonoBehaviour
         // DrawRenderSafe();
 
         load_RATA_waypoints();
+        update_rata_points();
     }
 
     private void update_rata_points()
     {
+
+        rate_waypoints_parent_go.SetActive(showRATAwaypoints);
+
         Camera sceneCamera = mainCamera.GetComponent<Camera>();
 
         foreach(RATA_waypoint_go waypoint in rata_waypoints_go)
@@ -175,7 +181,8 @@ public class Main : MonoBehaviour
             wp.name = $"wp_{waypoint.name}";
             TMPro.TextMeshProUGUI text = wp.GetComponent<TextMeshProUGUI>();
             text.text = waypoint.name;
-            wp.transform.parent = canvas.transform;
+            text.raycastTarget = false;
+            wp.transform.parent = rate_waypoints_parent_go.transform;
             
             RATA_waypoint_go w = new RATA_waypoint_go();
             w.waypoints_go = wp;
@@ -451,6 +458,14 @@ public class Main : MonoBehaviour
         UpdateShowBidirectional();
     }
 
+    public void ToggleShowRATAwaypoints(bool state)
+    {
+        showRATAwaypoints = state;
+        update_rata_points();
+    }
+
+
+
     private void Camera_Zoom(string size)
     {
 
@@ -542,11 +557,18 @@ public class Main : MonoBehaviour
         showReturnLeg.boolCallback = new UnityAction<bool>(ToggleShowReturnLeg);
         showReturnLeg.intialBoolValue = true;
 
+        Param showRATAwaypoints = new Param();
+        showRATAwaypoints.type = ParamType.Bool;
+        showRATAwaypoints.name = "Show Nav Waypoints";
+        showRATAwaypoints.boolCallback = new UnityAction<bool>(ToggleShowRATAwaypoints);
+        showRATAwaypoints.intialBoolValue = true;
+
         paramaters.Add(_renderOrientation);
         paramaters.Add(speed);
         paramaters.Add(mapOpacity);
         paramaters.Add(accumulatedTime);
         paramaters.Add(showReturnLeg);
+        paramaters.Add(showRATAwaypoints);
         inspector.Edit(this.gameObject, "Map settings", paramaters);   
     }
 
@@ -699,7 +721,7 @@ public class Main : MonoBehaviour
         // TODO: edit mode, delete mode
 
         //crosshair.transform.position = objectPos;
-
+        update_rata_points();
         
         if (toolbar.currentTool != ToolType.None && (Input.GetKeyDown(KeyCode.Escape) | Input.GetKeyDown(KeyCode.Return)))
         {
@@ -744,7 +766,14 @@ public class Main : MonoBehaviour
             System.Collections.Generic.List<RaycastResult> results = new System.Collections.Generic.List<RaycastResult>();
             EventSystem.current.RaycastAll(eventData, results);
             if (results.Count > 0){
-                return;
+                foreach (RaycastResult r in results)
+                {
+                    print(r.gameObject.name);
+                    if (r.gameObject.name == "InspectorPanel"){
+                        return;
+                    }
+                }
+                // return;
             }
        
 
@@ -875,6 +904,7 @@ public class Main : MonoBehaviour
                     break;
             }
             
+            rate_waypoints_parent_go.SetActive(false);
             RenderTexture rt = new RenderTexture(resWidth, resHeight, 24);
             exportCameraCamera.targetTexture = rt;
             Texture2D screenShot = new Texture2D(resWidth, resHeight, TextureFormat.RGB24, false);
@@ -897,6 +927,7 @@ public class Main : MonoBehaviour
             renderCanvas.SetActive(false);
             editorCanvas.SetActive(true);
             print_frames_rot.SetActive(true);
+            rate_waypoints_parent_go.SetActive(true);
         }
     }
 
