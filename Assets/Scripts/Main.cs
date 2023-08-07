@@ -713,13 +713,22 @@ public class Main : MonoBehaviour
 
     }
 
-    // bool IsMouseAboveMap()
-    // {
-    //     if (EventSystem.current.IsPointerOverGameObject())
-    //     {
-
-    //     }
-    // }
+    bool IsMouseAboveUIwaypoint()
+    {
+        PointerEventData eventData = new PointerEventData(EventSystem.current);
+        eventData.position = Input.mousePosition;
+        System.Collections.Generic.List<RaycastResult> results = new System.Collections.Generic.List<RaycastResult>();
+        EventSystem.current.RaycastAll(eventData, results);
+        if (results.Count > 0){
+            foreach (RaycastResult r in results)
+            {
+                if (r.gameObject.name.StartsWith("wp_")){
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
 
     // Update is called once per frame
     void Update()
@@ -783,7 +792,6 @@ public class Main : MonoBehaviour
             if (results.Count > 0){
                 foreach (RaycastResult r in results)
                 {
-                    print(r.gameObject.name);
                     if (r.gameObject.name == "InspectorPanel"){
                         return;
                     }
@@ -823,7 +831,7 @@ public class Main : MonoBehaviour
             case ToolType.Draw:
             {
                 // Draw mode:
-                if (Input.GetMouseButtonDown(0))// && !EventSystem.current.IsPointerOverGameObject()) // mouse left was clicked
+                if (Input.GetMouseButtonDown(0) && !IsMouseAboveUIwaypoint())// && !EventSystem.current.IsPointerOverGameObject()) // mouse left was clicked
                 {
                     GameObject wp1;
                     if (!WaypointsExists())
