@@ -161,6 +161,13 @@ public class Main : MonoBehaviour
 
             TMPro.TextMeshProUGUI text = waypoint.waypoints_go.GetComponent<TextMeshProUGUI>();
             text.enabled = sceneCamera.orthographicSize < 24;
+
+            RectTransform triangle_icon = waypoint.waypoints_go.transform.GetChild(0).GetComponent<RectTransform>();
+            float factor = sceneCamera.orthographicSize * 2f;
+            float base_size = 20;
+            triangle_icon.localScale = new Vector3(base_size/factor, base_size/factor, 1);
+
+            uiRectTransform.sizeDelta = new Vector2(100, (40/factor)*15+10);
         }
 
     }
@@ -706,6 +713,14 @@ public class Main : MonoBehaviour
 
     }
 
+    // bool IsMouseAboveMap()
+    // {
+    //     if (EventSystem.current.IsPointerOverGameObject())
+    //     {
+
+    //     }
+    // }
+
     // Update is called once per frame
     void Update()
     {
@@ -808,7 +823,7 @@ public class Main : MonoBehaviour
             case ToolType.Draw:
             {
                 // Draw mode:
-                if (Input.GetMouseButtonDown(0) && !EventSystem.current.IsPointerOverGameObject()) // mouse left was clicked
+                if (Input.GetMouseButtonDown(0))// && !EventSystem.current.IsPointerOverGameObject()) // mouse left was clicked
                 {
                     GameObject wp1;
                     if (!WaypointsExists())
