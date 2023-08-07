@@ -24,7 +24,6 @@ public class Waypoint : MonoBehaviour
         coordinate = Main.SceneToCoordinate(position);
         print(coordinate.Latitude.DecimalDegree);
         print(coordinate.Longitude.DecimalDegree);
-        print("XXX");
         lastPos = position;
     }
 

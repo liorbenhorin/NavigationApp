@@ -719,13 +719,21 @@ public class Main : MonoBehaviour
         eventData.position = Input.mousePosition;
         System.Collections.Generic.List<RaycastResult> results = new System.Collections.Generic.List<RaycastResult>();
         EventSystem.current.RaycastAll(eventData, results);
+
+        bool above_wp = false;
         if (results.Count > 0){
             foreach (RaycastResult r in results)
             {
                 if (r.gameObject.name.StartsWith("wp_")){
-                    return true;
+                    return false;
                 }
+                if (r.gameObject.name.StartsWith("nav_ico")){
+                    return false;
+                }
+                // print(r.gameObject.name);
+
             }
+            return true;
         }
         return false;
     }
@@ -781,7 +789,7 @@ public class Main : MonoBehaviour
         // if (Input.GetKey(KeyCode.Space))
         // {
             //Cursor.SetCursor(cursorTextureDrag, hotSpot, cursorMode); 
-        if (toolbar.currentTool == ToolType.None && !gizmos.is_alive)
+        if (!gizmos.is_alive)
         {   
 
             // filter UI drags
@@ -800,27 +808,33 @@ public class Main : MonoBehaviour
             }
        
 
-            if (Input.GetMouseButtonDown(0))
-            {
+            // if (Input.GetMouseButtonDown(0) || Input.GetMouseButtonDown(1))
+            // {
 
-                lastMouse = Input.mousePosition;
-                return;
-            }
+            //     lastMouse = Input.mousePosition;
+            //     if (toolbar.currentTool == ToolType.None) { 
+            //         return;
+            //     }
+            //     // return;
+            // }
 
-            if (Input.GetMouseButton(0))
-            {
-                //Cursor.SetCursor(cursorTextureDragAction, hotSpot, cursorMode);
+            // if (Input.GetMouseButton(0) || Input.GetMouseButton(1))
+            // {
+            //     //Cursor.SetCursor(cursorTextureDragAction, hotSpot, cursorMode);
 
-                var curMouse = Input.mousePosition;
-                var pos = Camera.main.ScreenToViewportPoint(lastMouse - curMouse);
-                var orthographicSize = mapCameraCamera.orthographicSize;
-                var move = new Vector3(pos.x * dragSpeed * (orthographicSize / 10), 0,
-                    pos.y * dragSpeed * (orthographicSize / 10));
-                lastMouse = curMouse;
-                mapCameraTransform.Translate(move, Space.World);
-                update_rata_points();
-                return;
-                }
+            //     var curMouse = Input.mousePosition;
+            //     var pos = Camera.main.ScreenToViewportPoint(lastMouse - curMouse);
+            //     var orthographicSize = mapCameraCamera.orthographicSize;
+            //     var move = new Vector3(pos.x * dragSpeed * (orthographicSize / 10), 0,
+            //         pos.y * dragSpeed * (orthographicSize / 10));
+            //     lastMouse = curMouse;
+            //     mapCameraTransform.Translate(move, Space.World);
+            //     update_rata_points();
+            //     if (toolbar.currentTool == ToolType.None) { 
+            //         return;
+            //     }
+            //     // return;
+            //     }
             // }
         }
         ////////////////////////////////////////////////////////////
@@ -831,7 +845,7 @@ public class Main : MonoBehaviour
             case ToolType.Draw:
             {
                 // Draw mode:
-                if (Input.GetMouseButtonDown(0) && !IsMouseAboveUIwaypoint()) // mouse left was clicked //!IsMouseAboveUIwaypoint()) !EventSystem.current.IsPointerOverGameObject()
+                if (Input.GetMouseButtonDown(0) && !IsMouseAboveUIwaypoint())
                 {
                     GameObject wp1;
                     if (!WaypointsExists())
@@ -845,6 +859,8 @@ public class Main : MonoBehaviour
                     
                     var wp2 = CreateWaypoint(objectPos);
                     DrawLegs();
+                    gizmos.OnTargetObjectChanged(null);
+                    
                 }
                 else if (resumeDrawing)
                 {
@@ -886,12 +902,31 @@ public class Main : MonoBehaviour
 
             case ToolType.None: 
             {
-                return;
+                break;
             }
 
         }
 
-        
+        if (!gizmos.is_alive)
+        {
+            if (Input.GetMouseButtonDown(0) || Input.GetMouseButtonDown(1))
+            {
+                lastMouse = Input.mousePosition;
+            }
+
+            if (Input.GetMouseButton(0) || Input.GetMouseButton(1))
+            {
+
+                var curMouse = Input.mousePosition;
+                var pos = Camera.main.ScreenToViewportPoint(lastMouse - curMouse);
+                var orthographicSize = mapCameraCamera.orthographicSize;
+                var move = new Vector3(pos.x * dragSpeed * (orthographicSize / 10), 0,
+                    pos.y * dragSpeed * (orthographicSize / 10));
+                lastMouse = curMouse;
+                mapCameraTransform.Translate(move, Space.World);
+                update_rata_points();
+            }
+        }
 
     }
 

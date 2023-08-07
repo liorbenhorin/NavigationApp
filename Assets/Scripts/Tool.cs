@@ -66,7 +66,9 @@ public class Tool : MonoBehaviour,
 
     public void OnPointerDown(PointerEventData eventData)
     {
+
         Clicked();
+
     }
 
     #else
