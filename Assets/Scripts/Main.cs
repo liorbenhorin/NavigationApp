@@ -831,7 +831,7 @@ public class Main : MonoBehaviour
             case ToolType.Draw:
             {
                 // Draw mode:
-                if (Input.GetMouseButtonDown(0) && !IsMouseAboveUIwaypoint())// && !EventSystem.current.IsPointerOverGameObject()) // mouse left was clicked
+                if (Input.GetMouseButtonDown(0) && !IsMouseAboveUIwaypoint()) // mouse left was clicked //!IsMouseAboveUIwaypoint()) !EventSystem.current.IsPointerOverGameObject()
                 {
                     GameObject wp1;
                     if (!WaypointsExists())
